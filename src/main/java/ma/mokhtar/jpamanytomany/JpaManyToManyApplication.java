@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
 
@@ -15,6 +16,11 @@ public class JpaManyToManyApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(JpaManyToManyApplication.class, args);
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

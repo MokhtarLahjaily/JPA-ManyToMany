@@ -7,6 +7,7 @@ import ma.mokhtar.jpamanytomany.entities.User;
 import ma.mokhtar.jpamanytomany.repositories.RoleRepository;
 import ma.mokhtar.jpamanytomany.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,9 +18,11 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private BCryptPasswordEncoder passwordEncoder;
     @Override
     public User addNewUser(User user) {
         user.setUserId(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
 
     }
@@ -58,7 +61,7 @@ public class UserServiceImpl implements UserService {
         if(user == null){
             throw new RuntimeException("Bad Credentials");
         }
-        if(user.getPassword().equals(password)){
+        if(passwordEncoder.matches(password,user.getPassword())){
             return user;
         }
         throw new RuntimeException("Bad Credentials");
